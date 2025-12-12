@@ -48,9 +48,7 @@ ST_model = "sentence-transformers/paraphrase-mpnet-base-v2"
 """Large Language Models"""
 PRE_TRAINED_MODELS = {
     "BERT": "bert-base-uncased",
-    "legal-BERT": "nlpaueb/legal-bert-base-uncased",
     "RoBERTa": "roberta-base",
-    "ALBERT": "albert-base-v2",
 }
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
