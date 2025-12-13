@@ -90,20 +90,6 @@ else
 fi
 
 # =============================================================================
-# Preprocess OPP-115 dataset for GDPR classification
-# =============================================================================
-TRAIN_CSV="Input/opp115_train.csv"
-TEST_CSV="Input/opp115_test.csv"
-
-if [ ! -f "$TRAIN_CSV" ] || [ ! -f "$TEST_CSV" ]; then
-    echo ""
-    echo "Preprocessing OPP-115 dataset for GDPR classification..."
-    python Resources/data_preprocessing.py "$OPP115_DIR"
-else
-    echo "Preprocessed datasets already exist (opp115_train.csv, opp115_test.csv)"
-fi
-
-# =============================================================================
 # Done
 # =============================================================================
 echo ""
@@ -117,6 +103,9 @@ echo ""
 echo "Datasets available in Input/:"
 echo "  - OPP-115/ (115 privacy policies with annotations)"
 echo "  - jurix_2020_opp-115_gdpr_dataset/ (GDPR mapping)"
-echo "  - opp115_train.csv (preprocessed training data)"
+echo ""
+echo "To preprocess the datasets for GDPR classification, run:"
+echo "  python Resources/data_preprocessing.py Input/OPP-115"
+echo ""
 echo "  - opp115_test.csv (preprocessed test data)"
 echo ""
