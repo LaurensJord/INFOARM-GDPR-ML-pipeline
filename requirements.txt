@@ -1,11 +1,12 @@
+setuptools
+wheel
 imblearn
-numpy==1.22.4
-pandas==1.5.3
+numpy>=1.26.0
+pandas>=2.0.0
 scikit-learn
-torch == 1.12.1
-transformers==4.18.0
-sentence_transformers==2.2.2
-setfit==0.7.0
-datasets==2.13.0
-openpyxl==3.0.9
-cudatoolkit==11.7.0
+torch>=2.0.0
+transformers>=4.36.0
+sentence_transformers>=2.2.2
+setfit>=1.0.0
+datasets>=2.14.0
+openpyxl>=3.0.9
