@@ -53,18 +53,7 @@ The [OPP-115 corpus](https://usableprivacy.org/data) contains **115 website priv
 | Other | Introductory text, definitions, etc. |
 
 ### 2. JURIX 2020 GDPR Mapping
-The [JURIX 2020 paper](https://ebooks.iospress.nl/volumearticle/56133) ("From Prescription to Description: Mapping the GDPR to a Privacy Policy Corpus Annotation Scheme") provides the mapping between OPP-115 categories and GDPR articles/principles.
-
-**Key mappings to GDPR Articles 13 & 14 (Transparency Requirements):**
-
-| OPP-115 Category | GDPR Articles | GDPR Principle |
-|------------------|---------------|----------------|
-| First Party Collection/Use | Art. 5, 6, 7, 13, 14 | Lawfulness, Purpose limitation |
-| Third Party Sharing/Collection | Art. 13(1)(e,f), 14, 44-49 | Lawfulness, Data minimisation |
-| User Choice/Control | Art. 7, 13(2)(b,c), 21 | Lawfulness |
-| User Access, Edit and Deletion | Art. 12-22 | Accuracy |
-| Data Retention | Art. 5(1)(e), 13(2)(a) | Storage limitation |
-| Data Security | Art. 5(1)(f), 32 | Integrity & confidentiality |
+The [JURIX 2020 paper](https://www.usableprivacy.org/static/files/swilson_acl_2016.pdf) ("From Prescription to Description: Mapping the GDPR to a Privacy Policy Corpus Annotation Scheme") provides the mapping between OPP-115 categories and GDPR articles/principles.
 
 ### 3. Simplified Classification Schema
 For practical multi-class classification, we map OPP-115 to 9 GDPR-aligned categories:
