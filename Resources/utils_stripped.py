@@ -12,6 +12,9 @@ import pandas as pd
 import torch
 from torch import nn, optim
 from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
+import time
+import psutil
+from contextlib import contextmanager
 
 from transformers import (
     BertModel, BertTokenizerFast,
@@ -73,13 +76,10 @@ def ensure_opp115_labels(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def load_opp115_from_df(df: pd.DataFrame) -> Tuple[pd.DataFrame, Optional[pd.DataFrame]]:
-    df = ensure_opp115_labels(df)
-    if "dataset_type" not in df.columns:
-        return df.reset_index(drop=True), None
-    train = df[df["dataset_type"] == "train"].copy()
-    test = df[df["dataset_type"] == "test"].copy()
-    return train.reset_index(drop=True), test.reset_index(drop=True)
+def load_opp115_from_df(df_train: pd.DataFrame, df_test) -> Tuple[pd.DataFrame, Optional[pd.DataFrame]]:
+    df_train = ensure_opp115_labels(df_train)
+    df_test = ensure_opp115_labels(df_test)
+    return df_train.reset_index(drop=True), df_test.reset_index(drop=True)
 
 
 def split_train_val(train_df: pd.DataFrame, val_size: float = 0.2) -> Tuple[pd.DataFrame, pd.DataFrame]:
@@ -456,3 +456,44 @@ def evaluate_predictions(y_true: np.ndarray, y_pred: np.ndarray) -> Dict:
     report = classification_report(y_true, y_pred, labels=LABEL_IDS, target_names=LABEL_NAMES, output_dict=True, zero_division=0)
     cm = confusion_matrix(y_true, y_pred, labels=LABEL_IDS)
     return {"report": report, "confusion_matrix": cm, "label_names": LABEL_NAMES}
+
+@contextmanager
+def measure_run(tag="run"):
+    proc = psutil.Process(os.getpid())
+
+    # CPU / RAM (start)
+    rss_start = proc.memory_info().rss
+    cpu_start = proc.cpu_times()
+    t0 = time.perf_counter()
+
+    # GPU (start)
+    if torch.cuda.is_available():
+        torch.cuda.reset_peak_memory_stats()
+        torch.cuda.synchronize()
+
+    yield  # ---- run training or inference here ----
+
+    # GPU (end)
+    if torch.cuda.is_available():
+        torch.cuda.synchronize()
+        gpu_peak_mb = torch.cuda.max_memory_allocated() / (1024**2)
+    else:
+        gpu_peak_mb = None
+
+    # CPU / RAM (end)
+    t1 = time.perf_counter()
+    rss_end = proc.memory_info().rss
+    cpu_end = proc.cpu_times()
+
+    result = {
+        "tag": tag,
+        "wall_time_sec": t1 - t0,
+        "cpu_user_sec": cpu_end.user - cpu_start.user,
+        "cpu_system_sec": cpu_end.system - cpu_start.system,
+        "ram_delta_mb": (rss_end - rss_start) / (1024**2),
+        "gpu_peak_mem_mb": gpu_peak_mb,
+    }
+
+    print("=== PERF ===")
+    for k, v in result.items():
+        print(f"{k}: {v}")
