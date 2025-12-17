@@ -63,7 +63,7 @@ else
 fi
 
 # Download JURIX 2020 GDPR Mapping dataset
-JURIX_URL="https://surfdrive.surf.nl/files/index.php/s/z2xNjw6lkCvGyhp/download"
+JURIX_URL="https://www.usableprivacy.org/static/data/JURIX_2020_OPP-115_GDPR_v1.0.zip"
 JURIX_ZIP="Input/JURIX_2020_mapping.zip"
 JURIX_DIR="Input/jurix_2020_opp-115_gdpr_dataset"
 
