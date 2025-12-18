@@ -39,15 +39,16 @@ if torch.cuda.is_available():
 # ## BERT Model
 
 # Train BERT (multi-class)
-res = U.train_transformer_mcc(
-    model_type="bert",
-    df_train=df_train,
-    df_val=df_val,
-    epochs=20,
-    batch_size=64,
-    lr=3e-5,
-    out_dir="artifacts/bert_mcc"
-)
+with U.measure_run("TRAINING - BERT - OPP115"):
+    res = U.train_transformer_mcc(
+        model_type="bert",
+        df_train=df_train,
+        df_val=df_val,
+        epochs=20,
+        batch_size=64,
+        lr=3e-5,
+        out_dir="artifacts/bert_mcc"
+    )
 
 bert_model = res["model"]
 bert_tokenizer = res["tokenizer"]
