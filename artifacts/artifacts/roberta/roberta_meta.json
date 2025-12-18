@@ -1,0 +1,16 @@
+{
+  "model_type": "roberta",
+  "n_classes": 9,
+  "labels": {
+    "DataCollection": 0,
+    "ThirdPartySharing": 1,
+    "UserRights": 2,
+    "DataRetention": 3,
+    "DataSecurity": 4,
+    "PolicyChange": 5,
+    "DoNotTrack": 6,
+    "SpecialAudiences": 7,
+    "Other": 8
+  },
+  "max_len": 160
+}
