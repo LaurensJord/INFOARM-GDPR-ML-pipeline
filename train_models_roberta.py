@@ -47,7 +47,7 @@ with U.measure_run("TRAINING - RoBERTa - OPP115"):
         epochs=20,
         batch_size=64,
         lr=3e-5,
-        out_dir="artifacts/roberta_mcc"
+        out_dir="artifacts/roberta"
     )
 
 roberta_model = res["model"]
