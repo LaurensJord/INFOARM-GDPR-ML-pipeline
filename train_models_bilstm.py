@@ -33,8 +33,7 @@ if torch.cuda.is_available():
     x = torch.tensor([1.0, 2.0, 3.0]).cuda()
     print("✓ CUDA tensor test passed:", x)
 
-df_train, df_val = U.split_train_val(train_df, val_size=0.2)
-
+# Train BiLSTM Model
 with U.measure_run("Train BiLSTM"):
     res = U.train_bilstm_mcc(
         df_train=df_train,

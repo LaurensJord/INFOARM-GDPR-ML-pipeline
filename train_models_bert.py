@@ -16,8 +16,6 @@ df_train, df_val = U.split_train_val(train_df, val_size=0.2)
 
 
 # # Training of Models
-
-
 # check if GPU is available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
@@ -35,9 +33,6 @@ if torch.cuda.is_available():
     x = torch.tensor([1.0, 2.0, 3.0]).cuda()
     print("✓ CUDA tensor test passed:", x)
 
-
-# ## BERT Model
-
 # Train BERT (multi-class)
 with U.measure_run("TRAINING - BERT - OPP115"):
     res = U.train_transformer_mcc(
@@ -52,3 +47,14 @@ with U.measure_run("TRAINING - BERT - OPP115"):
 
 bert_model = res["model"]
 bert_tokenizer = res["tokenizer"]
+
+
+# Evaluate BERT on test set
+bert_test_results = U.evaluate_transformer_mcc(
+    model=bert_model,
+    tokenizer=bert_tokenizer,
+    df_test=test_df,
+    batch_size=64
+)
+
+print("BERT Test Results:", bert_test_results)

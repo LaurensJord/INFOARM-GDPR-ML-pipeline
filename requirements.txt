@@ -10,3 +10,5 @@ sentence_transformers>=2.2.2
 setfit>=1.0.0
 datasets>=2.14.0
 openpyxl>=3.0.9
+protobuf
+sentencepiece
