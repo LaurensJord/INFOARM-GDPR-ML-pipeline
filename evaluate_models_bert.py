@@ -88,7 +88,7 @@ def main():
     y_true = test_df["label"].astype(int).to_numpy()
 
     # pick model
-    model_dir = "artifacts/artifacts/bert"      # of "artifacts/artifacts/roberta"
+    model_dir = "artifacts/bert"      # of "artifacts/artifacts/roberta"
     meta, state = load_meta_and_state(model_dir)
 
     print(f"Loaded model meta: {meta}")
