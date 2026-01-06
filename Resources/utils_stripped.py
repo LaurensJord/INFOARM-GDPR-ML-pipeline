@@ -497,3 +497,9 @@ def measure_run(tag="run"):
     print("=== PERF ===")
     for k, v in result.items():
         print(f"{k}: {v}")
+
+    # Save to file
+    with open("perf_log.json", "a", encoding="utf-8") as f:
+        f.write(json.dumps(result) + "\n")
+    
+    return result
