@@ -498,8 +498,13 @@ def measure_run(tag="run"):
     for k, v in result.items():
         print(f"{k}: {v}")
 
-    # Save to file
-    with open(f"/artifacts/performance/perf_{tag}.json", "a", encoding="utf-8") as f:
+    # Save to file - use path relative to this script's parent directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    perf_dir = os.path.join(os.path.dirname(script_dir), "artifacts", "performance")
+    os.makedirs(perf_dir, exist_ok=True)
+    
+    perf_file = os.path.join(perf_dir, f"perf_{tag}.json")
+    with open(perf_file, "a", encoding="utf-8") as f:
         f.write(json.dumps(result) + "\n")
     
     return result
