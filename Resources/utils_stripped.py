@@ -499,7 +499,7 @@ def measure_run(tag="run"):
         print(f"{k}: {v}")
 
     # Save to file
-    with open("perf_log.json", "a", encoding="utf-8") as f:
+    with open(f"/artifacts/performance/perf_{tag}.json", "a", encoding="utf-8") as f:
         f.write(json.dumps(result) + "\n")
     
     return result

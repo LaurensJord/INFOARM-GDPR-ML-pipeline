@@ -19,6 +19,41 @@ def fbeta_from_pr(p: float, r: float, beta: float = 2.0) -> float:
     b2 = beta * beta
     return (1 + b2) * p * r / (b2 * p + r)
 
+def add_f2_to_report(y_true, y_pred, report_dict, beta=2.0):
+    # collect label keys that are class rows in classification_report
+    class_keys = [
+        k for k in report_dict.keys()
+        if k not in {"accuracy", "macro avg", "weighted avg"}
+    ]
+    labels = np.array(sorted(int(k) for k in class_keys), dtype=int)
+
+    p, r, _, support = precision_recall_fscore_support(
+        y_true,
+        y_pred,
+        labels=labels,          # <- explicit list of labels => per-class arrays
+        average=None,           # <- forces per-class outputs (ndarrays)
+        zero_division=0,
+    )
+
+    p = np.asarray(p, dtype=float)
+    r = np.asarray(r, dtype=float)
+    support = np.asarray(support, dtype=int)
+
+    for lbl, pi, ri, si in zip(labels.tolist(), p.tolist(), r.tolist(), support.tolist()):
+        report_dict[str(lbl)]["f2-score"] = fbeta_from_pr(float(pi), float(ri), beta)
+
+    report_dict["macro avg"]["f2-score"] = fbeta_from_pr(
+        float(report_dict["macro avg"]["precision"]),
+        float(report_dict["macro avg"]["recall"]),
+        beta,
+    )
+    report_dict["weighted avg"]["f2-score"] = fbeta_from_pr(
+        float(report_dict["weighted avg"]["precision"]),
+        float(report_dict["weighted avg"]["recall"]),
+        beta,
+    )
+
+    return report_dict
 
 def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray):
     metrics = {}
@@ -29,7 +64,7 @@ def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray):
         metrics[f"f1_{avg}"] = float(f1)
         metrics[f"f2_{avg}"] = float(fbeta_from_pr(float(p), float(r), beta=2.0))
 
-    metrics["classification_report"] = classification_report(y_true, y_pred, output_dict=True, zero_division=0)
+    metrics["classification_report"] = add_f2_to_report(y_true, y_pred, classification_report(y_true, y_pred, output_dict=True, zero_division=0))
     metrics["confusion_matrix"] = confusion_matrix(y_true, y_pred).tolist()
     return metrics
 
