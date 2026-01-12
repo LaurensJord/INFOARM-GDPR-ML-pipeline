@@ -26,9 +26,23 @@ from sklearn.metrics import classification_report, confusion_matrix
 
 from sentence_transformers import SentenceTransformer
 
+# Default seed for single-run experiments
 RANDOM_SEED = 42
-np.random.seed(RANDOM_SEED)
-torch.manual_seed(RANDOM_SEED)
+# Multiple seeds for experimental validation (to demonstrate robustness)
+RANDOM_SEEDS = [42, 123, 456]
+
+def set_seed(seed: int = RANDOM_SEED):
+    """Set all random seeds for reproducibility."""
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+
+# Initialize with default seed
+set_seed(RANDOM_SEED)
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

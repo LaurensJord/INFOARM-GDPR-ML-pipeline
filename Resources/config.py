@@ -9,6 +9,8 @@ import torch
 # RANDOM SEEDS AND REPRODUCIBILITY
 # =============================================================================
 RANDOM_SEED = 42
+# Multiple seeds for experimental validation (to demonstrate robustness)
+RANDOM_SEEDS = [42, 123, 456]
 
 # =============================================================================
 # MODEL CONFIGURATION
