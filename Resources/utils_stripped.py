@@ -373,7 +373,11 @@ def train_bilstm_mcc(
     input_size = int(Xtr.shape[1])
 
     model = BiLSTMClassifier(input_size=input_size, hidden_dim=hidden_dim, output_dim=N_CLASSES).to(DEVICE)
-    train_loader = DataLoader(EmbeddingDataset(Xtr, df_train["label"].to_numpy()), batch_size=batch_size, shuffle=True, num_workers=2)
+    counts = df_train["label"].value_counts().sort_index()
+    weights_by_class = (counts.sum() / counts).to_dict()
+    sample_weights = df_train["label"].map(weights_by_class).astype(float).to_numpy()
+    sampler = WeightedRandomSampler(sample_weights, num_samples=len(sample_weights), replacement=True)
+    train_loader = DataLoader(EmbeddingDataset(Xtr, df_train["label"].to_numpy()), batch_size=batch_size, sampler=sampler, num_workers=2)
     val_loader = DataLoader(EmbeddingDataset(Xva, df_val["label"].to_numpy()), batch_size=batch_size, shuffle=False, num_workers=2)
 
     optimizer = optim.Adam(model.parameters(), lr=lr)
