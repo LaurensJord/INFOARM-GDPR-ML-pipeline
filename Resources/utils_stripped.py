@@ -376,6 +376,33 @@ def train_transformer_mcc(
 
 
 @torch.no_grad()
+def evaluate_transformer_mcc(
+    model,
+    tokenizer,
+    df_test: pd.DataFrame,
+    batch_size: int = 64,
+) -> Dict:
+    """Evaluate a transformer model on test data and return metrics."""
+    df_test = ensure_opp115_labels(df_test)
+    texts = df_test["text"].tolist()
+    y_true = df_test["label"].to_numpy()
+    
+    preds, proba = predict_transformer(model, tokenizer, texts, batch_size=batch_size, return_proba=True)
+    y_pred = np.array([CLASS_TO_ID[p] for p in preds])
+    
+    report = classification_report(
+        y_true, y_pred, labels=LABEL_IDS, target_names=LABEL_NAMES, output_dict=True, zero_division=0
+    )
+    
+    return {
+        "report": report,
+        "y_true": y_true.tolist(),
+        "y_pred": y_pred.tolist(),
+        "predictions": preds,
+    }
+
+
+@torch.no_grad()
 def predict_transformer(model, tokenizer, texts: List[str], batch_size: int = 64, return_proba: bool = False):
     model.eval()
     all_probs, all_pred = [], []
@@ -497,6 +524,33 @@ def predict_bilstm(model, texts: List[str], emb_cfg: EmbeddingConfig = Embedding
         all_pred.extend([ID_TO_CLASS[int(j)] for j in pred_ids])
     proba = np.vstack(all_probs) if return_proba else None
     return all_pred, proba
+
+
+@torch.no_grad()
+def evaluate_bilstm_mcc(
+    model,
+    df_test: pd.DataFrame,
+    emb_cfg: EmbeddingConfig = EmbeddingConfig(),
+    batch_size: int = 32,
+) -> Dict:
+    """Evaluate a BiLSTM model on test data and return metrics."""
+    df_test = ensure_opp115_labels(df_test)
+    texts = df_test["text"].tolist()
+    y_true = df_test["label"].to_numpy()
+    
+    preds, proba = predict_bilstm(model, texts, emb_cfg=emb_cfg, batch_size=batch_size, return_proba=True)
+    y_pred = np.array([CLASS_TO_ID[p] for p in preds])
+    
+    report = classification_report(
+        y_true, y_pred, labels=LABEL_IDS, target_names=LABEL_NAMES, output_dict=True, zero_division=0
+    )
+    
+    return {
+        "report": report,
+        "y_true": y_true.tolist(),
+        "y_pred": y_pred.tolist(),
+        "predictions": preds,
+    }
 
 
 def evaluate_predictions(y_true: np.ndarray, y_pred: np.ndarray) -> Dict:

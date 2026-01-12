@@ -68,6 +68,32 @@ def train_all_models_with_seed(seed: int, df_train: pd.DataFrame, df_val: pd.Dat
     
     results = {"seed": seed, "models": {}}
     
+    # Train BiLSTM (first - fastest model)
+    print(f"\n[Seed {seed}] Training BiLSTM...")
+    U.set_seed(seed)  # Reset seed before each model
+    with U.measure_run(f"TRAINING - BiLSTM - Seed {seed}"):
+        bilstm_res = U.train_bilstm_mcc(
+            df_train=df_train_seed,
+            df_val=df_val_seed,
+            epochs=3,
+            batch_size=32,
+            lr=1e-4,
+            out_dir=f"artifacts/bilstm_seed_{seed}"
+        )
+    
+    # Evaluate BiLSTM
+    bilstm_test = U.evaluate_bilstm_mcc(
+        model=bilstm_res["model"],
+        df_test=test_df,
+        batch_size=32
+    )
+    results["models"]["bilstm"] = {
+        "best_val_macro_f1": bilstm_res["best_val_macro_f1"],
+        "test_metrics": bilstm_test,
+        "all_metrics": extract_full_metrics(bilstm_test)
+    }
+    print(f"[Seed {seed}] BiLSTM Test Macro F1: {bilstm_test.get('report', {}).get('macro avg', {}).get('f1-score', 'N/A'):.4f}")
+    
     # Train BERT
     print(f"\n[Seed {seed}] Training BERT...")
     U.set_seed(seed)  # Reset seed before each model
@@ -123,32 +149,6 @@ def train_all_models_with_seed(seed: int, df_train: pd.DataFrame, df_val: pd.Dat
         "all_metrics": extract_full_metrics(roberta_test)
     }
     print(f"[Seed {seed}] RoBERTa Test Macro F1: {roberta_test.get('report', {}).get('macro avg', {}).get('f1-score', 'N/A'):.4f}")
-    
-    # Train BiLSTM
-    print(f"\n[Seed {seed}] Training BiLSTM...")
-    U.set_seed(seed)  # Reset seed before each model
-    with U.measure_run(f"TRAINING - BiLSTM - Seed {seed}"):
-        bilstm_res = U.train_bilstm_mcc(
-            df_train=df_train_seed,
-            df_val=df_val_seed,
-            epochs=3,
-            batch_size=32,
-            lr=1e-4,
-            out_dir=f"artifacts/bilstm_seed_{seed}"
-        )
-    
-    # Evaluate BiLSTM
-    bilstm_test = U.evaluate_bilstm_mcc(
-        model=bilstm_res["model"],
-        df_test=test_df,
-        batch_size=32
-    )
-    results["models"]["bilstm"] = {
-        "best_val_macro_f1": bilstm_res["best_val_macro_f1"],
-        "test_metrics": bilstm_test,
-        "all_metrics": extract_full_metrics(bilstm_test)
-    }
-    print(f"[Seed {seed}] BiLSTM Test Macro F1: {bilstm_test.get('report', {}).get('macro avg', {}).get('f1-score', 'N/A'):.4f}")
     
     return results
 
