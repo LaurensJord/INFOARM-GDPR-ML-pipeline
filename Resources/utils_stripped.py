@@ -150,13 +150,13 @@ def make_text_dataloader(
     )
 
     if not class_weighted_sampler:
-        return DataLoader(ds, batch_size=batch_size, shuffle=True, num_workers=0)
+        return DataLoader(ds, batch_size=batch_size, shuffle=True, num_workers=2)
 
     counts = df["label"].value_counts().sort_index()
     weights_by_class = (counts.sum() / counts).to_dict()
     sample_weights = df["label"].map(weights_by_class).astype(float).to_numpy()
     sampler = WeightedRandomSampler(sample_weights, num_samples=len(sample_weights), replacement=True)
-    return DataLoader(ds, batch_size=batch_size, sampler=sampler, num_workers=0)
+    return DataLoader(ds, batch_size=batch_size, sampler=sampler, num_workers=2)
 
 
 class BertClassifier(nn.Module):
@@ -296,24 +296,37 @@ def train_transformer_mcc(
     lr: float = 2e-5,
     out_dir: Optional[str] = None,
 ) -> Dict:
+    print(f"A. entered train_transformer_mcc (model_type={model_type})")
     df_train = ensure_opp115_labels(df_train)
     df_val = ensure_opp115_labels(df_val)
+    print("B. labels ensured")
 
     if model_type == "bert":
         backbone = "bert-base-uncased"
+        print(f"C. loading BERT tokenizer from {backbone}")
         tokenizer = BertTokenizerFast.from_pretrained(backbone)
+        print("D. tokenizer loaded, loading BERT model")
         model = BertClassifier(N_CLASSES, backbone)
+        print("E. BERT model created")
     elif model_type == "roberta":
         backbone = "roberta-base"
+        print(f"C. loading RoBERTa tokenizer from {backbone}")
         tokenizer = RobertaTokenizerFast.from_pretrained(backbone)
+        print("D. tokenizer loaded, loading RoBERTa model")
         model = RobertaClassifier(N_CLASSES, backbone)
+        print("E. RoBERTa model created")
     else:
         raise ValueError("model_type must be 'bert' or 'roberta'")
 
+    print("F. moving model to device")
     model.to(DEVICE)
+    print(f"G. model on {DEVICE}")
 
+    print("H. creating train dataloader")
     train_loader = make_text_dataloader(df_train, tokenizer, batch_size, class_weighted_sampler=True)
+    print(f"I. train dataloader created ({len(train_loader)} batches)")
     val_loader = make_text_dataloader(df_val, tokenizer, batch_size, class_weighted_sampler=False)
+    print(f"J. val dataloader created ({len(val_loader)} batches)")
 
     optimizer = optim.AdamW(model.parameters(), lr=lr)
     total_steps = len(train_loader) * epochs
@@ -395,8 +408,8 @@ def train_bilstm_mcc(
     weights_by_class = (counts.sum() / counts).to_dict()
     sample_weights = df_train["label"].map(weights_by_class).astype(float).to_numpy()
     sampler = WeightedRandomSampler(sample_weights, num_samples=len(sample_weights), replacement=True)
-    train_loader = DataLoader(EmbeddingDataset(Xtr, df_train["label"].to_numpy()), batch_size=batch_size, sampler=sampler, num_workers=0)
-    val_loader = DataLoader(EmbeddingDataset(Xva, df_val["label"].to_numpy()), batch_size=batch_size, shuffle=False, num_workers=0)
+    train_loader = DataLoader(EmbeddingDataset(Xtr, df_train["label"].to_numpy()), batch_size=batch_size, sampler=sampler, num_workers=2)
+    val_loader = DataLoader(EmbeddingDataset(Xva, df_val["label"].to_numpy()), batch_size=batch_size, shuffle=False, num_workers=2)
 
     optimizer = optim.Adam(model.parameters(), lr=lr)
     loss_fn = nn.CrossEntropyLoss().to(DEVICE)

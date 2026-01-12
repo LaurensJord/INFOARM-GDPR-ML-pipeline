@@ -9,10 +9,15 @@ import time
 import Resources.utils_stripped as U
 
 
+print("1. Starting training...")
+print("2. Loading data...")
 train_df = pd.read_csv("Input/opp115_train.csv")
 test_df = pd.read_csv("Input/opp115_test.csv")
+print("3. Data loaded")
 train_df, test_df = U.load_opp115_from_df(train_df, test_df)
+print("4. Labels processed")
 df_train, df_val = U.split_train_val(train_df, val_size=0.2)
+print("5. Split done")
 
 
 # # Training of Models
