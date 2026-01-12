@@ -379,11 +379,15 @@ def train_bilstm_mcc(
     lr: float = 1e-4,
     out_dir: Optional[str] = None,
 ) -> Dict:
+    print("A. entered train_bilstm_mcc")
     df_train = ensure_opp115_labels(df_train)
     df_val = ensure_opp115_labels(df_val)
+    print("B. labels ensured")
 
     Xtr = embed_sentences(df_train, emb_cfg)
+    print(f"C. training embeddings done: {Xtr.shape}")
     Xva = embed_sentences(df_val, emb_cfg)
+    print(f"D. validation embeddings done: {Xva.shape}")
     input_size = int(Xtr.shape[1])
 
     model = BiLSTMClassifier(input_size=input_size, hidden_dim=hidden_dim, output_dim=N_CLASSES).to(DEVICE)
