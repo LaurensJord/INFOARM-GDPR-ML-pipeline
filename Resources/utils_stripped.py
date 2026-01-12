@@ -328,17 +328,28 @@ def train_transformer_mcc(
     val_loader = make_text_dataloader(df_val, tokenizer, batch_size, class_weighted_sampler=False)
     print(f"J. val dataloader created ({len(val_loader)} batches)")
 
+    print("K. creating optimizer...")
     optimizer = optim.AdamW(model.parameters(), lr=lr)
+    print("L. optimizer created")
+
     total_steps = len(train_loader) * epochs
+    print(f"M. total_steps = {total_steps}")
+
     scheduler = get_linear_schedule_with_warmup(optimizer, 0, total_steps)
+    print("N. scheduler created")
+
     loss_fn = nn.CrossEntropyLoss().to(DEVICE)
+    print("O. loss function created")
 
     best_macro_f1 = -1.0
     best_state = None
     history = []
 
+    print("P. starting epoch loop...")
     for ep in range(1, epochs + 1):
+        print(f"Epoch {ep}/{epochs} starting...")
         tr_loss = _epoch_transformer_train(model, train_loader, loss_fn, optimizer, scheduler)
+        print(f"Epoch {ep}/{epochs} - train_loss: {tr_loss:.4f}, running validation...")
         va_loss, va_pred, va_y = _epoch_transformer_eval(model, val_loader, loss_fn)
 
         report = classification_report(
@@ -346,6 +357,7 @@ def train_transformer_mcc(
         )
         macro_f1 = float(report["macro avg"]["f1-score"])
         history.append({"epoch": ep, "train_loss": tr_loss, "val_loss": va_loss, "val_macro_f1": macro_f1})
+        print(f"Epoch {ep}/{epochs} - val_loss: {va_loss:.4f}, val_macro_f1: {macro_f1:.4f}")
 
         if macro_f1 > best_macro_f1:
             best_macro_f1 = macro_f1
