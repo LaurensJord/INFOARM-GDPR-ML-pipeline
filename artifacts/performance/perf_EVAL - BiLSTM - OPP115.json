@@ -1,1 +1,2 @@
 {"tag": "EVAL - BiLSTM - OPP115", "wall_time_sec": 3.756813701009378, "cpu_user_sec": 3.21, "cpu_system_sec": 0.14000000000000012, "ram_delta_mb": 181.375, "gpu_peak_mem_mb": 341.1904296875}
+{"tag": "EVAL - BiLSTM - OPP115", "wall_time_sec": 1.3576289749998978, "cpu_user_sec": 2.92, "cpu_system_sec": 0.4199999999999997, "ram_delta_mb": 429.4140625, "gpu_peak_mem_mb": 356.1904296875}

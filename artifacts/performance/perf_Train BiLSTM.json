@@ -1,0 +1,7 @@
+{"tag": "Train BiLSTM", "wall_time_sec": 14.641559784000037, "cpu_user_sec": 15.059999999999999, "cpu_system_sec": 2.51, "ram_delta_mb": 676.17578125, "gpu_peak_mem_mb": 659.55126953125}
+{"tag": "Train BiLSTM", "wall_time_sec": 12.76928273500016, "cpu_user_sec": 14.909999999999998, "cpu_system_sec": 2.3099999999999996, "ram_delta_mb": 632.8203125, "gpu_peak_mem_mb": 659.55126953125}
+{"tag": "Train BiLSTM", "wall_time_sec": 11.400856809999823, "cpu_user_sec": 14.4, "cpu_system_sec": 1.94, "ram_delta_mb": 663.734375, "gpu_peak_mem_mb": 659.55126953125}
+{"tag": "Train BiLSTM", "wall_time_sec": 11.406865169999946, "cpu_user_sec": 14.41, "cpu_system_sec": 1.9300000000000002, "ram_delta_mb": 647.00390625, "gpu_peak_mem_mb": 659.55126953125}
+{"tag": "Train BiLSTM", "wall_time_sec": 12.717420396999842, "cpu_user_sec": 14.729999999999999, "cpu_system_sec": 2.33, "ram_delta_mb": 706.125, "gpu_peak_mem_mb": 659.55126953125}
+{"tag": "Train BiLSTM", "wall_time_sec": 12.843574792999789, "cpu_user_sec": 15.07, "cpu_system_sec": 2.29, "ram_delta_mb": 708.6640625, "gpu_peak_mem_mb": 659.55126953125}
+{"tag": "Train BiLSTM", "wall_time_sec": 12.607763934999639, "cpu_user_sec": 14.98, "cpu_system_sec": 2.21, "ram_delta_mb": 714.87890625, "gpu_peak_mem_mb": 659.55126953125}
