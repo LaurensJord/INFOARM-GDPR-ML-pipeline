@@ -150,13 +150,13 @@ def make_text_dataloader(
     )
 
     if not class_weighted_sampler:
-        return DataLoader(ds, batch_size=batch_size, shuffle=True, num_workers=2)
+        return DataLoader(ds, batch_size=batch_size, shuffle=True, num_workers=0)
 
     counts = df["label"].value_counts().sort_index()
     weights_by_class = (counts.sum() / counts).to_dict()
     sample_weights = df["label"].map(weights_by_class).astype(float).to_numpy()
     sampler = WeightedRandomSampler(sample_weights, num_samples=len(sample_weights), replacement=True)
-    return DataLoader(ds, batch_size=batch_size, sampler=sampler, num_workers=2)
+    return DataLoader(ds, batch_size=batch_size, sampler=sampler, num_workers=0)
 
 
 class BertClassifier(nn.Module):
@@ -391,8 +391,8 @@ def train_bilstm_mcc(
     weights_by_class = (counts.sum() / counts).to_dict()
     sample_weights = df_train["label"].map(weights_by_class).astype(float).to_numpy()
     sampler = WeightedRandomSampler(sample_weights, num_samples=len(sample_weights), replacement=True)
-    train_loader = DataLoader(EmbeddingDataset(Xtr, df_train["label"].to_numpy()), batch_size=batch_size, sampler=sampler, num_workers=2)
-    val_loader = DataLoader(EmbeddingDataset(Xva, df_val["label"].to_numpy()), batch_size=batch_size, shuffle=False, num_workers=2)
+    train_loader = DataLoader(EmbeddingDataset(Xtr, df_train["label"].to_numpy()), batch_size=batch_size, sampler=sampler, num_workers=0)
+    val_loader = DataLoader(EmbeddingDataset(Xva, df_val["label"].to_numpy()), batch_size=batch_size, shuffle=False, num_workers=0)
 
     optimizer = optim.Adam(model.parameters(), lr=lr)
     loss_fn = nn.CrossEntropyLoss().to(DEVICE)
