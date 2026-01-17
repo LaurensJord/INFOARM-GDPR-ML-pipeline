@@ -1,0 +1,2 @@
+{"tag": "EVAL - BERT - OPP115", "wall_time_sec": 65.73309095698642, "cpu_user_sec": 66.08, "cpu_system_sec": 0.06000000000000005, "ram_delta_mb": 50.7109375, "gpu_peak_mem_mb": 789.0791015625}
+{"tag": "EVAL - BERT - OPP115", "wall_time_sec": 7.4860155309997936, "cpu_user_sec": 7.790000000000001, "cpu_system_sec": 0.19999999999999973, "ram_delta_mb": 302.109375, "gpu_peak_mem_mb": 764.2900390625}

@@ -1,0 +1,14 @@
+setuptools
+wheel
+imblearn
+numpy>=1.26.0
+pandas>=2.0.0
+scikit-learn
+torch>=2.0.0
+transformers>=4.36.0
+sentence_transformers>=2.2.2
+setfit>=1.0.0
+datasets>=2.14.0
+openpyxl>=3.0.9
+protobuf
+sentencepiece

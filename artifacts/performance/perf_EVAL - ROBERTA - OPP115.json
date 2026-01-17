@@ -1,0 +1,2 @@
+{"tag": "EVAL - ROBERTA - OPP115", "wall_time_sec": 65.88787478400627, "cpu_user_sec": 66.22, "cpu_system_sec": 0.06000000000000005, "ram_delta_mb": 54.453125, "gpu_peak_mem_mb": 847.0771484375}
+{"tag": "EVAL - ROBERTA - OPP115", "wall_time_sec": 7.067067456000586, "cpu_user_sec": 7.369999999999999, "cpu_system_sec": 0.22999999999999998, "ram_delta_mb": 307.03125, "gpu_peak_mem_mb": 822.2880859375}
